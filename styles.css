@@ -1,0 +1,452 @@
+/* ==========================================================
+   ITパスポート合格ナビ — スタイル(パステルガーリー)
+   ========================================================== */
+
+:root {
+  color-scheme: light;
+  --bg-page: #FFF0F5;
+  --bg-card: #FFFFFF;
+  --bg-card-soft: #FFF7FA;
+
+  --text-primary: #4A2545;
+  --text-secondary: #6B5B76;
+  --text-muted: #75647F;
+
+  --border-soft: #F5D9EA;
+
+  /* --color-* = bar-fill / large-mark identity (checked against the page
+     surface). --color-*-text = the same field's color for small text and
+     chip use (validated separately at >=4.5:1 against its own tint). */
+  --color-strategy: #DB2777;
+  --color-strategy-text: #9D174D;
+  --color-strategy-bg: #FCE7F3;
+  --color-management: #7C3AED;
+  --color-management-text: #5B21B6;
+  --color-management-bg: #EDE9FE;
+  --color-technology: #0D9488;
+  --color-technology-text: #065F46;
+  --color-technology-bg: #D1FAE5;
+
+  --color-good: #15803D;
+  --color-good-bg: #DCFCE7;
+  --color-critical: #BE123C;
+  --color-critical-bg: #FFE1E6;
+
+  --color-levelup: #92400E;
+  --color-levelup-bg: #FDE68A;
+  --color-milestone: #9D174D;
+  --color-milestone-bg: #FBCFE8;
+
+  --btn-primary-bg: #F9A8D4;
+  --btn-primary-bg-hover: #F472B6;
+  --btn-primary-text: #831843;
+
+  --btn-secondary-bg: #A7F3D0;
+  --btn-secondary-bg-hover: #6EE7B7;
+  --btn-secondary-text: #065F46;
+
+  --btn-accent-bg: #C4B5FD;
+  --btn-accent-bg-hover: #A78BFA;
+  --btn-accent-text: #4C1D95;
+
+  --shadow-soft: 0 4px 14px rgba(219, 39, 119, 0.12);
+  --radius-card: 20px;
+  --radius-btn: 999px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg-page: #241B2E;
+    --bg-card: #2F2438;
+    --bg-card-soft: #362A41;
+
+    --text-primary: #FBEFFF;
+    --text-secondary: #C9B8D6;
+    --text-muted: #A594B8;
+
+    --border-soft: #4A3B57;
+
+    /* Dark mode: the bar-fill identity color needs a deeper/desaturated
+       step to sit in the dark OKLCH lightness band, so it reads poorly as
+       small text on a dark surface. The lighter pre-refresh pastels are
+       reused as the dedicated text/chip color instead (validated >=6.5:1). */
+    --color-strategy: #E0489A;
+    --color-strategy-text: #F9A8D4;
+    --color-strategy-bg: #4A2B45;
+    --color-management: #9673F5;
+    --color-management-text: #C4B5FD;
+    --color-management-bg: #3B2E5C;
+    --color-technology: #0D9488;
+    --color-technology-text: #5EEAD4;
+    --color-technology-bg: #1F4A3D;
+
+    --color-good: #4ADE80;
+    --color-good-bg: #14532D;
+    --color-critical: #FB7185;
+    --color-critical-bg: #5C1A2B;
+
+    --color-levelup: #FBBF24;
+    --color-levelup-bg: #4A3410;
+    --color-milestone: #F9A8D4;
+    --color-milestone-bg: #4A2B45;
+
+    /* btn-primary/secondary/accent intentionally NOT overridden here —
+       the light-mode pastel-bg + dark-text pairing already validates at
+       >=5.3:1 and reads as bright accent chips against the dark page. */
+
+    --shadow-soft: 0 4px 14px rgba(0, 0, 0, 0.35);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+#app { max-width: 720px; margin: 0 auto; padding-bottom: 40px; }
+
+/* ---------- Passcode gate ---------- */
+.passcode-gate {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-page);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.passcode-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+  padding: 32px 28px;
+  text-align: center;
+  max-width: 320px;
+  width: 100%;
+}
+.passcode-title { font-weight: 800; font-size: 17px; color: var(--color-strategy-text); margin: 0 0 4px; }
+.passcode-label { font-size: 13px; color: var(--text-secondary); margin: 0 0 16px; }
+.passcode-input {
+  width: 100%;
+  font-size: 24px;
+  letter-spacing: 8px;
+  text-align: center;
+  padding: 12px;
+  border-radius: 14px;
+  border: 2px solid var(--border-soft);
+  background: var(--bg-card-soft);
+  color: var(--text-primary);
+  margin-bottom: 14px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+.passcode-error { color: var(--color-critical); font-size: 12px; font-weight: 700; margin-top: 10px; }
+
+/* ---------- Header ---------- */
+#app-header {
+  background: var(--bg-card);
+  box-shadow: var(--shadow-soft);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.header-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.app-title { font-weight: 800; font-size: 16px; color: var(--color-strategy-text); }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.level-badge {
+  background: var(--color-management-bg);
+  color: var(--color-management-text);
+  font-weight: 800;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: var(--radius-btn);
+}
+.btn-header-home {
+  border: none;
+  background: var(--bg-card-soft);
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+}
+
+/* ---------- Layout ---------- */
+#app-main { padding: 18px; }
+.view { display: none; }
+.view.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-soft);
+}
+.card-title { margin: 0 0 12px; font-size: 15px; font-weight: 800; color: var(--text-primary); }
+.card-subtitle { font-size: 14px; font-weight: 800; color: var(--text-primary); margin: 18px 0 10px; }
+
+/* ---------- Stat tiles ---------- */
+.stat-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.stat-tile {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: 14px 8px;
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+}
+.stat-tile-label { font-size: 11px; color: var(--text-secondary); font-weight: 700; margin-bottom: 6px; }
+.stat-tile-value { font-size: 20px; font-weight: 800; color: var(--color-strategy-text); }
+.stat-tile-sub { font-size: 10px; color: var(--text-muted); font-weight: 700; margin-top: 3px; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  border: none;
+  border-radius: var(--radius-btn);
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.12s ease, background 0.12s ease;
+  padding: 12px 20px;
+  font-size: 14px;
+}
+.btn:hover { transform: translateY(-1px) scale(1.01); }
+.btn:active { transform: translateY(0) scale(0.98); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+.btn-primary { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+.btn-primary:hover:not(:disabled) { background: var(--btn-primary-bg-hover); }
+
+.btn-secondary { background: var(--btn-secondary-bg); color: var(--btn-secondary-text); }
+.btn-secondary:hover:not(:disabled) { background: var(--btn-secondary-bg-hover); }
+
+.btn-accent { background: var(--btn-accent-bg); color: var(--btn-accent-text); }
+.btn-accent:hover:not(:disabled) { background: var(--btn-accent-bg-hover); }
+
+.btn-ghost { background: transparent; color: var(--text-secondary); border: 2px solid var(--border-soft); }
+.btn-ghost:hover { background: var(--bg-card-soft); }
+
+.btn-danger { background: transparent; color: var(--color-critical); border: 2px solid var(--color-critical-bg); }
+.btn-danger:hover:not(:disabled) { background: var(--color-critical-bg); }
+
+/* ---------- Sync ---------- */
+.sync-hint { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin: 4px 0 12px; }
+.sync-block { margin-bottom: 16px; }
+.sync-block:last-child { margin-bottom: 0; }
+.sync-textarea {
+  width: 100%;
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 11px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 2px solid var(--border-soft);
+  background: var(--bg-card-soft);
+  color: var(--text-primary);
+  resize: vertical;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+}
+.sync-export-result { margin-top: 10px; }
+.sync-qr-wrap { margin-top: 10px; text-align: center; }
+.sync-qr-wrap canvas { border-radius: 12px; border: 2px solid var(--border-soft); }
+
+.btn-large { display: block; width: 100%; padding: 16px 20px; font-size: 15px; margin-bottom: 10px; }
+.btn-small { padding: 8px 14px; font-size: 12px; }
+
+.count-pill {
+  background: rgba(0,0,0,0.12);
+  border-radius: var(--radius-btn);
+  padding: 2px 9px;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+.action-grid { display: flex; flex-direction: column; }
+
+/* ---------- Field chart (bars) ---------- */
+.field-chart { display: flex; flex-direction: column; gap: 12px; }
+.field-bar-row { display: grid; grid-template-columns: 84px 1fr 44px; align-items: center; gap: 10px; }
+.field-bar-name { font-size: 12px; font-weight: 700; color: var(--text-secondary); }
+.field-bar-track { background: var(--bg-card-soft); border-radius: var(--radius-btn); height: 14px; overflow: hidden; border: 1px solid var(--border-soft); }
+.field-bar-fill { height: 100%; border-radius: var(--radius-btn); transition: width 0.4s ease; }
+.field-bar-pct { font-size: 12px; font-weight: 800; text-align: right; color: var(--text-primary); }
+
+/* ---------- Recent log ---------- */
+.recent-log { font-size: 13px; color: var(--text-secondary); }
+.log-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed var(--border-soft); font-size: 13px; }
+.log-row:last-child { border-bottom: none; }
+
+/* ---------- Question card ---------- */
+.practice-progress, .mock-progress {
+  text-align: center;
+  font-weight: 800;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+.question-meta {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: var(--radius-btn);
+  margin-bottom: 10px;
+}
+.question-text { font-size: 16px; font-weight: 700; line-height: 1.6; margin: 0 0 16px; }
+
+.choices { display: flex; flex-direction: column; gap: 10px; }
+.choice-btn {
+  text-align: left;
+  border: 2px solid var(--border-soft);
+  background: var(--bg-card-soft);
+  color: var(--text-primary);
+  border-radius: 14px;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.choice-btn:hover:not(:disabled) { border-color: var(--color-strategy); transform: translateX(2px); }
+.choice-btn:disabled { cursor: default; }
+.choice-btn.is-selected { border-color: var(--color-management); }
+.choice-btn.is-correct { background: var(--color-good-bg); border-color: var(--color-good); color: var(--color-good); font-weight: 800; }
+.choice-btn.is-incorrect { background: var(--color-critical-bg); border-color: var(--color-critical); color: var(--color-critical); font-weight: 800; }
+.choice-btn.is-dim { opacity: 0.5; }
+
+.feedback-panel { animation: popIn 0.25s ease; }
+@keyframes popIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+.feedback-label { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+.feedback-label.is-correct { color: var(--color-good); }
+.feedback-label.is-incorrect { color: var(--color-critical); }
+.feedback-explanation {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 14px;
+}
+
+/* ---------- Banners ---------- */
+.banner {
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  font-weight: 800;
+  font-size: 14px;
+  animation: popIn 0.3s ease;
+  text-align: center;
+}
+.banner p { margin: 0; }
+.banner-levelup { background: var(--color-levelup-bg); color: var(--color-levelup); }
+.banner-maxlevel { background: linear-gradient(135deg, var(--color-levelup-bg), var(--color-milestone-bg)); color: var(--color-levelup); }
+.banner-milestone { background: var(--color-milestone-bg); color: var(--color-milestone); }
+.banner-result.is-pass { background: var(--color-good-bg); color: var(--color-good); }
+.banner-result.is-fail { background: var(--color-critical-bg); color: var(--color-critical); }
+.banner-result { font-size: 16px; padding: 18px; }
+
+.next-level-note {
+  background: var(--bg-card-soft);
+  border: 1px dashed var(--border-soft);
+  border-radius: 16px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+.next-level-note p { margin: 0; }
+
+.celebrate-card { text-align: center; }
+.result-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 14px; }
+.result-box {
+  background: var(--bg-card-soft);
+  border-radius: 16px;
+  padding: 14px 18px;
+  min-width: 120px;
+}
+.result-box-label { font-size: 11px; color: var(--text-secondary); font-weight: 700; margin-bottom: 6px; }
+.result-box-value { font-size: 22px; font-weight: 800; color: var(--color-strategy-text); }
+
+.button-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 10px; }
+.button-row .btn { flex: 1; min-width: 140px; margin-bottom: 0; }
+
+/* ---------- Mock exam ---------- */
+.mock-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.mock-title { font-weight: 800; color: var(--color-management-text); }
+.mock-timer {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  background: var(--color-critical-bg);
+  color: var(--color-critical);
+  padding: 4px 12px;
+  border-radius: var(--radius-btn);
+  font-size: 13px;
+}
+.mock-palette { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
+.palette-btn {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  border: 2px solid var(--border-soft);
+  background: var(--bg-card-soft);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.palette-btn.is-current { border-color: var(--color-management); }
+.palette-btn.is-answered { background: var(--color-management-bg); color: var(--color-management-text); border-color: var(--color-management-bg); }
+
+/* ---------- Mock result ---------- */
+.field-score-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
+.field-score-table th, .field-score-table td { padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--border-soft); }
+.field-score-table th { color: var(--text-secondary); font-weight: 700; }
+.score-note { font-size: 11px; color: var(--text-muted); line-height: 1.6; text-align: left; }
+.wrong-list { text-align: left; display: flex; flex-direction: column; gap: 10px; }
+.wrong-item {
+  background: var(--bg-card-soft);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 13px;
+}
+.wrong-item .wq-question { font-weight: 700; margin-bottom: 6px; }
+.wrong-item .wq-answer { color: var(--color-good); font-weight: 700; margin-bottom: 4px; }
+.wrong-item .wq-explanation { color: var(--text-secondary); line-height: 1.6; }
+
+/* ---------- Stats view ---------- */
+.study-log, .mock-history { display: flex; flex-direction: column; gap: 6px; }
+.study-log .log-row, .mock-history .log-row { font-size: 13px; }
+.mock-badge { font-weight: 800; padding: 2px 10px; border-radius: var(--radius-btn); font-size: 11px; }
+.mock-badge.is-pass { background: var(--color-good-bg); color: var(--color-good); }
+.mock-badge.is-fail { background: var(--color-critical-bg); color: var(--color-critical); }
+
+/* ---------- Field tag colors (utility) ---------- */
+.tag-strategy { background: var(--color-strategy-bg); color: var(--color-strategy-text); }
+.tag-management { background: var(--color-management-bg); color: var(--color-management-text); }
+.tag-technology { background: var(--color-technology-bg); color: var(--color-technology-text); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+  .stat-tiles { gap: 8px; }
+  .stat-tile-value { font-size: 17px; }
+  .button-row .btn { min-width: 100%; }
+}

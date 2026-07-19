@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ITパスポート合格ナビ">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#F9A8D4">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<title>ITパスポート合格ナビ</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="passcode-gate" class="passcode-gate">
+  <div class="passcode-card">
+    <p class="passcode-title">📘 ITパスポート合格ナビ</p>
+    <p class="passcode-label">パスコードを入力してください</p>
+    <input id="passcode-input" type="tel" inputmode="numeric" maxlength="6" class="passcode-input" autocomplete="off">
+    <button id="btn-passcode-submit" class="btn btn-primary btn-large">入る</button>
+    <p id="passcode-error" class="passcode-error" hidden>パスコードが違います</p>
+  </div>
+</div>
+
+<div id="app">
+
+  <header id="app-header">
+    <div class="header-inner">
+      <span class="app-title">📘 ITパスポート合格ナビ</span>
+      <div class="header-right">
+        <span id="header-level" class="level-badge">Lv.1</span>
+        <button id="btn-header-home" class="btn-header-home" hidden>🏠 ホーム</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="app-main">
+
+    <!-- ============ ホーム画面 ============ -->
+    <section id="view-home" class="view">
+      <div class="stat-tiles">
+        <div class="stat-tile">
+          <div class="stat-tile-label">現在レベル</div>
+          <div class="stat-tile-value" id="home-level">Lv.1</div>
+          <div class="stat-tile-sub" id="home-level-progress"></div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-tile-label">累計解答数</div>
+          <div class="stat-tile-value" id="home-total-answered">0問</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-tile-label">累計正答率</div>
+          <div class="stat-tile-value" id="home-overall-accuracy">-</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">分野別 正答率</h2>
+        <div id="home-field-chart" class="field-chart"></div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">最近の学習履歴</h2>
+        <div id="home-recent-log" class="recent-log">まだ記録がありません。さっそく演習を始めましょう!</div>
+      </div>
+
+      <div class="action-grid">
+        <button id="btn-start-practice" class="btn btn-primary btn-large">✏️ 10問演習を始める</button>
+        <button id="btn-start-review" class="btn btn-secondary btn-large" disabled>
+          🔁 復習リストで解き直す <span id="home-review-count" class="count-pill">0</span>
+        </button>
+        <button id="btn-start-mock-full" class="btn btn-accent">📝 模試(フル 100問/120分)</button>
+        <button id="btn-start-mock-mini" class="btn btn-accent">📝 模試(ミニ 50問/60分)</button>
+        <button id="btn-view-stats" class="btn btn-ghost">📊 統計・履歴を見る</button>
+      </div>
+    </section>
+
+    <!-- ============ 演習/復習ビュー(共通) ============ -->
+    <section id="view-practice" class="view">
+      <div class="practice-progress" id="practice-progress">問 1/10</div>
+
+      <div class="card question-card">
+        <div class="question-meta" id="practice-meta"></div>
+        <p class="question-text" id="practice-question"></p>
+        <div class="choices" id="practice-choices"></div>
+      </div>
+
+      <div class="feedback-panel" id="practice-feedback" hidden>
+        <div class="feedback-label" id="practice-result-label"></div>
+        <p class="feedback-explanation" id="practice-explanation"></p>
+        <button id="btn-practice-next" class="btn btn-primary btn-large">次へ ▶</button>
+      </div>
+
+      <button id="btn-practice-exit" class="btn btn-ghost btn-small">やめて ホームに戻る</button>
+    </section>
+
+    <!-- ============ セット完了ビュー ============ -->
+    <section id="view-set-complete" class="view">
+      <div class="card celebrate-card">
+        <h2 class="card-title" id="setcomplete-heading">お疲れさまでした!</h2>
+        <div class="result-row">
+          <div class="result-box">
+            <div class="result-box-label">今回の正答率</div>
+            <div class="result-box-value" id="setcomplete-accuracy">-</div>
+          </div>
+          <div class="result-box">
+            <div class="result-box-label">累計解答数</div>
+            <div class="result-box-value" id="setcomplete-total">-</div>
+          </div>
+        </div>
+
+        <div id="setcomplete-levelup-banner" class="banner banner-levelup" hidden>
+          <p id="levelup-message"></p>
+        </div>
+        <div id="setcomplete-maxlevel-banner" class="banner banner-maxlevel" hidden>
+          <p id="maxlevel-message"></p>
+        </div>
+        <div id="setcomplete-milestone-banner" class="banner banner-milestone" hidden>
+          <p id="milestone-message"></p>
+        </div>
+        <div id="setcomplete-nextlevel-note" class="next-level-note" hidden>
+          <p id="nextlevel-message"></p>
+        </div>
+
+        <div class="button-row">
+          <button id="btn-continue-next-set" class="btn btn-primary btn-large">次の10問へ ▶</button>
+          <button id="btn-back-home" class="btn btn-ghost">ホームに戻る</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 模試ビュー ============ -->
+    <section id="view-mock" class="view">
+      <div class="mock-topbar">
+        <span id="mock-title" class="mock-title">模試</span>
+        <span id="mock-timer" class="mock-timer">120:00</span>
+      </div>
+      <div class="mock-progress" id="mock-progress">問 1/100</div>
+
+      <div class="card question-card">
+        <div class="question-meta" id="mock-meta"></div>
+        <p class="question-text" id="mock-question"></p>
+        <div class="choices" id="mock-choices"></div>
+      </div>
+
+      <div class="mock-palette" id="mock-palette"></div>
+
+      <div class="button-row">
+        <button id="btn-mock-prev" class="btn btn-ghost">◀ 前へ</button>
+        <button id="btn-mock-next" class="btn btn-ghost">次へ ▶</button>
+        <button id="btn-mock-submit" class="btn btn-accent">提出する</button>
+      </div>
+    </section>
+
+    <!-- ============ 模試結果ビュー ============ -->
+    <section id="view-mock-result" class="view">
+      <div class="card celebrate-card">
+        <div id="mockresult-banner" class="banner banner-result">
+          <p id="mockresult-headline"></p>
+        </div>
+
+        <div class="result-row">
+          <div class="result-box">
+            <div class="result-box-label">総合点(1000点満点換算)</div>
+            <div class="result-box-value" id="mockresult-total-score">-</div>
+          </div>
+        </div>
+
+        <table class="field-score-table" id="mockresult-field-scores"></table>
+        <p class="score-note">※本番のIT パスポート試験は非公開のIRT(項目反応理論)方式で採点されるため完全な再現はできません。ここでは素点(正答数)を1000点満点に比例換算した近似スコアです。</p>
+
+        <h3 class="card-subtitle">間違えた問題の復習</h3>
+        <div id="mockresult-wrong-list" class="wrong-list"></div>
+
+        <div class="button-row">
+          <button id="btn-mockresult-home" class="btn btn-primary btn-large">ホームに戻る</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 統計・履歴ビュー ============ -->
+    <section id="view-stats" class="view">
+      <div class="card">
+        <h2 class="card-title">分野別 正答率</h2>
+        <div id="stats-field-chart" class="field-chart"></div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">学習履歴(日別解答数)</h2>
+        <div id="stats-study-log" class="study-log"></div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">模試 受験履歴</h2>
+        <div id="stats-mock-history" class="mock-history"></div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">PC・スマホ間で進捗を同期</h2>
+        <p class="sync-hint">この端末の進捗をコードにして、別の端末に貼り付けると引き継げます(自動では同期されません)。</p>
+
+        <div class="sync-block">
+          <button id="btn-sync-export" class="btn btn-accent btn-small">この端末の進捗コードを作成</button>
+          <div id="sync-export-result" class="sync-export-result" hidden>
+            <textarea id="sync-export-code" class="sync-textarea" readonly rows="3"></textarea>
+            <button id="btn-sync-copy" class="btn btn-secondary btn-small">📋 コピーする</button>
+            <div id="sync-qr-wrap" class="sync-qr-wrap" hidden>
+              <canvas id="sync-qr-canvas"></canvas>
+              <p class="sync-hint">スマホのカメラでこのQRを読み取ると開けます</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sync-block">
+          <textarea id="sync-import-input" class="sync-textarea" rows="3" placeholder="他の端末で作成したコードをここに貼り付け"></textarea>
+          <button id="btn-sync-import" class="btn btn-accent btn-small">このコードを読み込む(上書き)</button>
+        </div>
+      </div>
+
+      <button id="btn-stats-back" class="btn btn-ghost">ホームに戻る</button>
+
+      <div class="danger-zone">
+        <button id="btn-reset-data" class="btn btn-danger btn-small">🗑️ 学習データをリセット</button>
+        <p class="danger-zone-note">レベル・累計解答数・正答率・復習リスト・学習履歴・模試履歴を全て削除します(この端末のみ)</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="qrcode.js"></script>
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
