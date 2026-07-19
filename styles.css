@@ -122,6 +122,7 @@ body {
   justify-content: center;
   padding: 20px;
 }
+.passcode-gate[hidden] { display: none; }
 .passcode-card {
   background: var(--bg-card);
   border-radius: var(--radius-card);
